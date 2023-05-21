@@ -1,4 +1,6 @@
 import React from 'react';
+import GoalForm from '../components/GoalForm';
+import BillReminderForm from '../components/BillReminder';
 import MyPieChart from '../components/MyPieChart';
 import Auth from '../utils/auth';
 
@@ -10,6 +12,8 @@ const Home = () => {
       {loggedIn ? (
         <>
           <h1>Welcome, {Auth.getProfile().data.username}!</h1>
+          <GoalForm />
+          <BillReminderForm />
           <MyPieChart />
         </>
       ) : (

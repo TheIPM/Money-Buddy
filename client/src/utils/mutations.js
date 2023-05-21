@@ -23,3 +23,26 @@ export const ADD_USER = gql`
     }
   }
 `;
+
+export const CREATE_GOAL = gql`
+  mutation createGoal($userId: ID!, $title: String!, $description: String!, $targetAmount: Float!) {
+    addGoal(userId: $userId, title: $title, description: $description, targetAmount: $targetAmount) {
+      _id
+      title
+      description
+      targetAmount
+    }
+  }
+`;
+
+export const CREATE_BILL_REMINDER = gql`
+  mutation createBillReminder($userId: ID!, $title: String!, $description: String!, $dueDate: String!, $amount: Float!) {
+    addBillReminder(userId: $userId, title: $title, description: $description, dueDate: $dueDate, amount: $amount) {
+      _id
+      title
+      description
+      dueDate
+      amount
+    }
+  }
+`;

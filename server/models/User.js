@@ -19,6 +19,24 @@ const userSchema = new Schema({
     required: true,
     minlength: 5,
   },
+  financeData: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'FinanceData'
+    }
+  ],
+  goals: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Goal'
+    }
+  ],
+  billReminders: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'BillReminder'
+    }
+  ]
 });
 
 userSchema.pre('save', async function (next) {

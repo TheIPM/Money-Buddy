@@ -1,20 +1,29 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User } = require('../models');
+const { User, FinanceData, Goal, BillReminder } = require('../models');
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
     users: async () => {
-      return User.find();
+      return User.find().populate('financeData');
     },
     user: async (parent, { username }) => {
-      return User.findOne({ username });
+      return User.findOne({ username }).populate('financeData');
     },
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id });
+        return User.findOne({ _id: context.user._id }).populate('financeData');
       }
       throw new AuthenticationError('You need to be logged in!');
+    },
+    userFinanceData: async (parent, { userId }) => {
+      return FinanceData.find({ user: userId });
+    },
+    userGoals: async (parent, { userId }) => {
+      return Goal.find({ user: userId });
+    },
+    userBillReminders: async (parent, { userId }) => {
+      return BillReminder.find({ user: userId });
     },
   },
 
@@ -41,7 +50,53 @@ const resolvers = {
 
       return { token, user };
     },
+    addFinanceData: async (parent, { userId, month, year, expenses, income, investments }) => {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new AuthenticationError('No user found with this id');
+      }
+      const financeData = await FinanceData.create({ user: userId, month: month, year: year, expenses: expenses, income: income, investments: investments });
+      user.financeData.push(financeData);
+      await user.save();
+      return financeData;
+    },
+    updateFinanceData: async (parent, { _id, expenses, income, investments }) => {
+      const updatedFinanceData = await FinanceData.findByIdAndUpdate(_id, { expenses, income, investments }, { new: true });
+      return updatedFinanceData;
+    },
+    addGoal: async (parent, { userId, title, description, targetAmount }, context) => {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new AuthenticationError('No user found with this id');
+      }
+      const goal = await Goal.create({ user: userId, title, description, targetAmount });
+      user.goals.push(goal);
+      await user.save();
+      return goal;
+    },
+    addBillReminder: async (parent, { userId, title, description, amount, dueDate }, context) => {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new AuthenticationError('No user found with this id');
+      }
+      const billReminder = await BillReminder.create({ user: userId, title, description, amount, dueDate });
+      user.billReminders.push(billReminder);
+      await user.save();
+      return billReminder;
+    },
   },
+
+  User: {
+    financeData: async (parent, { month, year }) => {
+      return FinanceData.findOne({ user: parent._id, month: month, year: year });
+    },
+    goals: async (parent, args, context) => {
+      return Goal.find({ user: parent._id });
+    },
+    billReminders: async (parent, args, context) => {
+      return BillReminder.find({ user: parent._id });
+    }
+  }
 };
 
 module.exports = resolvers;
