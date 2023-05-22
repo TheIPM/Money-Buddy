@@ -64,12 +64,14 @@ const resolvers = {
       const updatedFinanceData = await FinanceData.findByIdAndUpdate(_id, { expenses, income, investments }, { new: true });
       return updatedFinanceData;
     },
-    addGoal: async (parent, { userId, title, description, targetAmount }, context) => {
-      const user = await User.findById(userId);
+    addGoal: async (parent, { description, targetAmount, targetDate }, context) => {
+      const user = await User.findById(context.user._id);
       if (!user) {
-        throw new AuthenticationError('No user found with this id');
+        throw new AuthenticationError('You must be logged in to create a goal');
       }
-      const goal = await Goal.create({ user: userId, title, description, targetAmount });
+      // Include targetDate when creating a new goal
+      const goal = await Goal.create({ user: user._id, description, targetAmount, targetDate });
+      console.log(JSON.stringify(user, null, 2));
       user.goals.push(goal);
       await user.save();
       return goal;

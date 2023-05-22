@@ -25,12 +25,12 @@ export const ADD_USER = gql`
 `;
 
 export const CREATE_GOAL = gql`
-  mutation createGoal($userId: ID!, $title: String!, $description: String!, $targetAmount: Float!) {
-    addGoal(userId: $userId, title: $title, description: $description, targetAmount: $targetAmount) {
+  mutation createGoal($description: String!, $targetAmount: Float!, $targetDate: String!) {
+    addGoal(description: $description, targetAmount: $targetAmount, targetDate: $targetDate) {
       _id
-      title
       description
       targetAmount
+      targetDate
     }
   }
 `;

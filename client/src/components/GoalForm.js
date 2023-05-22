@@ -5,36 +5,49 @@ import { CREATE_GOAL } from '../utils/mutations';
 import AuthService from '../utils/auth'; 
 
 const GoalForm = () => {
-  const [userProfile, setUserProfile] = useState(null);
-  
-  useEffect(() => {
-    setUserProfile(AuthService.getProfile());
-  }, []);
-
   const [goal, setGoal] = useState({
-    userId: '',
     description: '',
     targetAmount: '',
     targetDate: '',
-});
+    title: '', // add title field
+  });
 
-  useEffect(() => {
-    if (userProfile) {
-      setGoal((prevGoal) => ({ ...prevGoal, userId: userProfile._id }));
-    }
-  }, [userProfile]);
+  const [addedGoal, setAddedGoal] = useState(null);  // new state for added goal
 
   const [createGoal, { error: goalError }] = useMutation(CREATE_GOAL);
 
   const handleChange = (e) => {
-    setGoal({ ...goal, [e.target.name]: e.target.value });
+    let value = e.target.value;
+
+    // ensure targetAmount is a number
+    if (e.target.name === "targetAmount") {
+      value = parseFloat(e.target.value);
+    }
+
+    setGoal({ ...goal, [e.target.name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // check that all fields have been filled in
+    for (let field in goal) {
+      if (goal[field] === '') {
+        console.error(`Invalid input: ${field} is empty`);
+        return;
+      }
+    }
+  
+    // check that targetAmount is a valid number
+    if (isNaN(goal.targetAmount)) {
+      console.error("Invalid targetAmount");
+      return;
+    }
+  
     try {
-      await createGoal({ variables: { ...goal } });
-      setGoal({ userId: userProfile._id, description: '', targetAmount: '', targetDate: '' });
+      const { data } = await createGoal({ variables: { ...goal } });
+      setGoal({ description: '', targetAmount: '', targetDate: '', title: '' });
+      setAddedGoal(data.addGoal);  // update the addedGoal state
     } catch (error) {
       console.error(error);
     }
@@ -48,7 +61,14 @@ const GoalForm = () => {
   return (
     <div>
       <h2>Goal Form</h2>
-      <form onSubmit={handleSubmit}>  
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="title"
+          value={goal.title}
+          onChange={handleChange}
+          placeholder="Goal title"
+        />
         <input
           type="text"
           name="description"
@@ -73,6 +93,15 @@ const GoalForm = () => {
         <button type="submit">Add Goal</button>
       </form>
       <MyPieChart />
+
+      {addedGoal && (  // new div for displaying the added goal
+        <div>
+          <h2>Added Goal</h2>
+          <p>Description: {addedGoal.description}</p>
+          <p>Target Amount: {addedGoal.targetAmount}</p>
+          <p>Target Date: {new Date(parseInt(addedGoal.targetDate)).toLocaleDateString()}</p>
+        </div>
+      )}
     </div>
   );
 };
