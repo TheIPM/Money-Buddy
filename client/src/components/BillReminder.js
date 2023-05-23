@@ -1,45 +1,50 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState } from 'react'; 
 import { useMutation } from '@apollo/client';
-import { CREATE_BILL_REMINDER } from '../utils/mutations';
-import AuthService from '../utils/auth'; 
+import { CREATE_BILL_REMINDER } from '../utils/mutations'; 
 
 const BillReminderForm = () => {
-  const [userProfile, setUserProfile] = useState(null);
-  
-  useEffect(() => {
-    setUserProfile(AuthService.getProfile());
-  }, []);
-
   const [billReminder, setBillReminder] = useState({
-    userId: '',
     name: '',
+    description: '', 
     dueDate: '',
     amount: '',
-});
+  });
 
-  useEffect(() => {
-    if (userProfile) {
-      setBillReminder((prevBillReminder) => ({ ...prevBillReminder, userId: userProfile._id }));
-    }
-  }, [userProfile]);
-
-  const [createBillReminder, { error: billReminderError }] = useMutation(CREATE_BILL_REMINDER);
+  const [createBillReminder, { data: addedBillReminder, error: billReminderError }] = useMutation(CREATE_BILL_REMINDER);
 
   const handleChange = (e) => {
-    setBillReminder({ ...billReminder, [e.target.name]: e.target.value });
+    let value = e.target.value;
+
+    if (e.target.name === "amount") {
+      value = parseFloat(e.target.value);
+    }
+
+    setBillReminder({ ...billReminder, [e.target.name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    for (let field in billReminder) {
+      if (billReminder[field] === '') {
+        console.error(`Invalid input: ${field} is empty`);
+        return;
+      }
+    }
+  
+    if (isNaN(billReminder.amount)) {
+      console.error("Invalid amount");
+      return;
+    }
+  
     try {
       await createBillReminder({ variables: { ...billReminder } });
-      setBillReminder({ userId: userProfile._id, name: '', dueDate: '', amount: '' });
+      setBillReminder({ name: '', description: '', dueDate: '', amount: '' });
     } catch (error) {
       console.error(error);
     }
   };
 
-  // render error message if there is an error
   if (billReminderError) {
     return <p>Error! {billReminderError.message}</p>;
   }
@@ -54,6 +59,13 @@ const BillReminderForm = () => {
           value={billReminder.name}
           onChange={handleChange}
           placeholder="Bill name"
+        />
+        <input
+          type="text"
+          name="description"
+          value={billReminder.description}
+          onChange={handleChange}
+          placeholder="Description"
         />
         <input
           type="date"
@@ -71,6 +83,15 @@ const BillReminderForm = () => {
         />
         <button type="submit">Add Bill Reminder</button>
       </form>
+      {addedBillReminder && (  // new div for displaying the added bill reminder
+        <div>
+          <h2>Added Bill Reminder</h2>
+          <p>Name: {addedBillReminder.addBillReminder.name}</p>
+          <p>Description: {addedBillReminder.addBillReminder.description}</p>
+          <p>Due Date: {new Date(parseInt(addedBillReminder.addBillReminder.dueDate)).toLocaleDateString()}</p>
+          <p>Amount: {addedBillReminder.addBillReminder.amount}</p>
+        </div>
+      )}
     </div>
   );
 };

@@ -76,14 +76,17 @@ const resolvers = {
       await user.save();
       return goal;
     },
-    addBillReminder: async (parent, { userId, title, description, amount, dueDate }, context) => {
-      const user = await User.findById(userId);
+    addBillReminder: async (parent, { name, description, amount, dueDate }, context) => {
+      const user = await User.findById(context.user._id);
       if (!user) {
-        throw new AuthenticationError('No user found with this id');
+        throw new AuthenticationError('You must be logged in to create a bill reminder');
       }
-      const billReminder = await BillReminder.create({ user: userId, title, description, amount, dueDate });
+    
+      const billReminder = await BillReminder.create({ user: user._id, name, description, amount, dueDate });
+    
       user.billReminders.push(billReminder);
       await user.save();
+    
       return billReminder;
     },
   },

@@ -9,7 +9,7 @@ const GoalForm = () => {
     description: '',
     targetAmount: '',
     targetDate: '',
-    title: '', // add title field
+    title: '', 
   });
 
   const [addedGoal, setAddedGoal] = useState(null);  // new state for added goal
@@ -94,9 +94,10 @@ const GoalForm = () => {
       </form>
       <MyPieChart />
 
-      {addedGoal && (  // new div for displaying the added goal
+      {addedGoal && (  
         <div>
           <h2>Added Goal</h2>
+          <p>Title: {goal.title}</p>
           <p>Description: {addedGoal.description}</p>
           <p>Target Amount: {addedGoal.targetAmount}</p>
           <p>Target Date: {new Date(parseInt(addedGoal.targetDate)).toLocaleDateString()}</p>

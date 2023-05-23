@@ -37,12 +37,11 @@ const typeDefs = gql`
 
   type BillReminder {
     _id: ID!
-    user: ID!
-    title: String!
-    description: String!
-    amount: Float!
-    dueDate: String!
-  }
+    name: String!
+    description: String
+    amount: Float
+    dueDate: String
+}
 
   type Query {
     users: [User]
@@ -59,7 +58,7 @@ const typeDefs = gql`
     addFinanceData(userId: ID!, month: String!, year: String!, expenses: Float!, income: Float!, investments: Float!): FinanceData
     updateFinanceData(_id: ID!, expenses: Float!, income: Float!, investments: Float!): FinanceData
     addGoal(description: String!, targetAmount: Float!, targetDate: String!): Goal 
-    addBillReminder(userId: ID!, title: String!, description: String!, amount: Float!, dueDate: String!): BillReminder
+    addBillReminder(name: String!, description: String!, amount: Float!, dueDate: String!): BillReminder
   }
 `;
 
