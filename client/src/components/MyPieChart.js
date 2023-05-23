@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
+import { Container, Form, Button, Card } from 'react-bootstrap';
+import 'animate.css/animate.min.css';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
@@ -18,7 +20,7 @@ const MyPieChart = () => {
   };
 
   return (
-    <div>
+    <Container className="animate__animated animate__fadeIn">
       <h2>Your Financial Overview</h2>
       <PieChart width={400} height={400}>
         <Pie
@@ -37,21 +39,21 @@ const MyPieChart = () => {
         <Legend/>
       </PieChart>
       {data.map((item, index) => (
-        <div key={index}>
-          <label>{item.name}</label>
-          <input
+        <Form.Group controlId={`formValue${index}`} key={index}>
+          <Form.Label>{item.name}</Form.Label>
+          <Form.Control
             type="number"
             value={item.value}
             onChange={(e) => handleInputChange(e, index)}
           />
-        </div>
+        </Form.Group>
       ))}
-      <button onClick={() => setData([
+      <Button variant="primary" onClick={() => setData([
         { name: 'Expenses', value: 0 },
         { name: 'Income', value: 0 },
         { name: 'Investments', value: 0 },
-      ])}>Reset</button>
-    </div>
+      ])}>Reset</Button>
+    </Container>
   );
 };
 

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import MyPieChart from './MyPieChart';
 import { useMutation } from '@apollo/client';
 import { CREATE_GOAL } from '../utils/mutations';
-import AuthService from '../utils/auth'; 
+import AuthService from '../utils/auth';
+import { Container, Card, Form, Button } from 'react-bootstrap';
+import 'animate.css/animate.min.css';
 
 const GoalForm = () => {
   const [goal, setGoal] = useState({
@@ -59,52 +61,68 @@ const GoalForm = () => {
   }
 
   return (
-    <div>
+    <Container className="animate__animated animate__fadeIn">
       <h2>Goal Form</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="title"
-          value={goal.title}
-          onChange={handleChange}
-          placeholder="Goal title"
-        />
-        <input
-          type="text"
-          name="description"
-          value={goal.description}
-          onChange={handleChange}
-          placeholder="Goal description"
-        />
-        <input
-          type="number"
-          name="targetAmount"
-          value={goal.targetAmount}
-          onChange={handleChange}
-          placeholder="Target amount"
-        />
-        <input
-          type="date"
-          name="targetDate"
-          value={goal.targetDate}
-          onChange={handleChange}
-          placeholder="Target date"
-        />
-        <button type="submit">Add Goal</button>
-      </form>
-      <MyPieChart />
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formGoalTitle">
+          <Form.Label>Goal Title</Form.Label>
+          <Form.Control
+            type="text"
+            name="title"
+            value={goal.title}
+            onChange={handleChange}
+            placeholder="Goal title"
+          />
+        </Form.Group>
+        <Form.Group controlId="formGoalDescription">
+          <Form.Label>Goal Description</Form.Label>
+          <Form.Control
+            type="text"
+            name="description"
+            value={goal.description}
+            onChange={handleChange}
+            placeholder="Goal description"
+          />
+        </Form.Group>
+        <Form.Group controlId="formGoalTargetAmount">
+          <Form.Label>Target Amount</Form.Label>
+          <Form.Control
+            type="number"
+            name="targetAmount"
+            value={goal.targetAmount}
+            onChange={handleChange}
+            placeholder="Target amount"
+          />
+        </Form.Group>
+        <Form.Group controlId="formGoalTargetDate">
+          <Form.Label>Target Date</Form.Label>
+          <Form.Control
+            type="date"
+            name="targetDate"
+            value={goal.targetDate}
+            onChange={handleChange}
+            placeholder="Target date"
+          />
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Add Goal
+        </Button>
+      </Form>
+    
 
-      {addedGoal && (  
-        <div>
-          <h2>Added Goal</h2>
-          <p>Title: {goal.title}</p>
-          <p>Description: {addedGoal.description}</p>
-          <p>Target Amount: {addedGoal.targetAmount}</p>
-          <p>Target Date: {new Date(parseInt(addedGoal.targetDate)).toLocaleDateString()}</p>
-        </div>
+      {addedGoal && (
+        <Card className="mt-3 animate__animated animate__fadeIn">
+          <Card.Body>
+            <Card.Title>Added Goal</Card.Title>
+            <Card.Text>Title: {goal.title}</Card.Text>
+            <Card.Text>Description: {addedGoal.description}</Card.Text>
+            <Card.Text>Target Amount: {addedGoal.targetAmount}</Card.Text>
+            <Card.Text>Target Date: {new Date(parseInt(addedGoal.targetDate)).toLocaleDateString()}</Card.Text>
+          </Card.Body>
+        </Card>
       )}
-    </div>
-  );
+    </Container>
+);
 };
 
 export default GoalForm;
