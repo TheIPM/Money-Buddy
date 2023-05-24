@@ -36,13 +36,12 @@ export const CREATE_GOAL = gql`
 `;
 
 export const CREATE_BILL_REMINDER = gql`
- mutation AddBillReminder($name: String!, $description: String!, $amount: Float!, $dueDate: String!) {
-  addBillReminder(name: $name, description: $description, amount: $amount, dueDate: $dueDate) {
-    _id
-    name
-    description
-    amount
-    dueDate
+  mutation AddBillReminder($name: String!, $amount: Float!, $dueDate: String!) {
+    addBillReminder(name: $name, amount: $amount, dueDate: $dueDate) {
+      _id
+      name
+      amount
+      dueDate
+    }
   }
-}
 `;

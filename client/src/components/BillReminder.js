@@ -7,7 +7,6 @@ import 'animate.css/animate.min.css';
 const BillReminderForm = () => {
   const [billReminder, setBillReminder] = useState({
     name: '',
-    description: '', 
     dueDate: '',
     amount: '',
   });
@@ -41,7 +40,7 @@ const BillReminderForm = () => {
   
     try {
       await createBillReminder({ variables: { ...billReminder } });
-      setBillReminder({ name: '', description: '', dueDate: '', amount: '' });
+      setBillReminder({ name: '', dueDate: '', amount: '' });
     } catch (error) {
       console.error(error);
     }
@@ -63,16 +62,6 @@ const BillReminderForm = () => {
             value={billReminder.name}
             onChange={handleChange}
             placeholder="Bill name"
-          />
-        </Form.Group>
-        <Form.Group controlId="formBillDescription">
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            type="text"
-            name="description"
-            value={billReminder.description}
-            onChange={handleChange}
-            placeholder="Description"
           />
         </Form.Group>
         <Form.Group controlId="formBillDueDate">
@@ -104,14 +93,13 @@ const BillReminderForm = () => {
           <Card.Body>
             <Card.Title>Added Bill Reminder</Card.Title>
             <Card.Text>Name: {addedBillReminder.addBillReminder.name}</Card.Text>
-            <Card.Text>Description: {addedBillReminder.addBillReminder.description}</Card.Text>
             <Card.Text>Due Date: {new Date(parseInt(addedBillReminder.addBillReminder.dueDate)).toLocaleDateString()}</Card.Text>
             <Card.Text>Amount: {addedBillReminder.addBillReminder.amount}</Card.Text>
           </Card.Body>
         </Card>
       )}
     </Container>
-);
+  );
 };
 
 export default BillReminderForm;

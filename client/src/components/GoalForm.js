@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'; 
-import MyPieChart from './MyPieChart';
 import { useMutation } from '@apollo/client';
 import { CREATE_GOAL } from '../utils/mutations';
-import AuthService from '../utils/auth';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import 'animate.css/animate.min.css';
 
@@ -11,7 +9,6 @@ const GoalForm = () => {
     description: '',
     targetAmount: '',
     targetDate: '',
-    title: '', 
   });
 
   const [addedGoal, setAddedGoal] = useState(null);  // new state for added goal
@@ -48,7 +45,7 @@ const GoalForm = () => {
   
     try {
       const { data } = await createGoal({ variables: { ...goal } });
-      setGoal({ description: '', targetAmount: '', targetDate: '', title: '' });
+      setGoal({ description: '', targetAmount: '', targetDate: '' });
       setAddedGoal(data.addGoal);  // update the addedGoal state
     } catch (error) {
       console.error(error);
@@ -64,16 +61,7 @@ const GoalForm = () => {
     <Container className="animate__animated animate__fadeIn">
       <h2>Goal Form</h2>
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formGoalTitle">
-          <Form.Label>Goal Title</Form.Label>
-          <Form.Control
-            type="text"
-            name="title"
-            value={goal.title}
-            onChange={handleChange}
-            placeholder="Goal title"
-          />
-        </Form.Group>
+  
         <Form.Group controlId="formGoalDescription">
           <Form.Label>Goal Description</Form.Label>
           <Form.Control
@@ -114,7 +102,6 @@ const GoalForm = () => {
         <Card className="mt-3 animate__animated animate__fadeIn">
           <Card.Body>
             <Card.Title>Added Goal</Card.Title>
-            <Card.Text>Title: {goal.title}</Card.Text>
             <Card.Text>Description: {addedGoal.description}</Card.Text>
             <Card.Text>Target Amount: {addedGoal.targetAmount}</Card.Text>
             <Card.Text>Target Date: {new Date(parseInt(addedGoal.targetDate)).toLocaleDateString()}</Card.Text>
