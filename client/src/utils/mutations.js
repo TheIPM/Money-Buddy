@@ -35,6 +35,14 @@ export const CREATE_GOAL = gql`
   }
 `;
 
+export const DELETE_GOAL = gql`
+  mutation deleteGoal($goalId: ID!) {
+    deleteGoal(goalId: $goalId) {
+      _id
+    }
+  }
+`;
+
 export const CREATE_BILL_REMINDER = gql`
   mutation AddBillReminder($name: String!, $amount: Float!, $dueDate: String!) {
     addBillReminder(name: $name, amount: $amount, dueDate: $dueDate) {

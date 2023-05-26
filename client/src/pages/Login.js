@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
+import { QUERY_ME } from '../utils/queries';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
@@ -10,6 +11,7 @@ import Auth from '../utils/auth';
 const Login = (props) => {
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [login, { error }] = useMutation(LOGIN_USER);
+  const { loading, error: meError, data, refetch } = useQuery(QUERY_ME);
 
   // update state based on form input changes
   const handleChange = (event) => {
@@ -26,11 +28,17 @@ const Login = (props) => {
     event.preventDefault();
     console.log(formState);
     try {
-      const { data } = await login({
+      const { data: loginData } = await login({
         variables: { ...formState },
       });
 
-      Auth.login(data.login.token);
+      Auth.login(loginData.login.token);
+
+      // Refetch user's data
+      const userData = await refetch();
+
+      // Now you have the user's data, including their goals
+      console.log(userData);
     } catch (e) {
       console.error(e);
     }

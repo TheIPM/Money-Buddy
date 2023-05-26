@@ -89,6 +89,25 @@ const resolvers = {
     
       return billReminder;
     },
+    deleteGoal: async (parent, { goalId }, context) => {
+      if (context.user) {
+        const goal = await Goal.findById(goalId);
+    
+        // Check if goal exists
+        if (!goal) {
+          throw new Error('No goal found with this id');
+        }
+    
+        // Check if logged-in user is the owner of the goal
+        if (goal.user.toString() !== context.user._id) {
+          throw new AuthenticationError('Action not allowed');
+        }
+    
+        await Goal.findByIdAndDelete(goalId);
+        return goal;
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
   },
 
   User: {

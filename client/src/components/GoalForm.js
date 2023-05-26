@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState } from 'react'; 
 import { useMutation } from '@apollo/client';
-import { CREATE_GOAL } from '../utils/mutations';
+import { CREATE_GOAL, DELETE_GOAL } from '../utils/mutations';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import 'animate.css/animate.min.css';
 
@@ -11,14 +11,14 @@ const GoalForm = () => {
     targetDate: '',
   });
 
-  const [addedGoal, setAddedGoal] = useState(null);  // new state for added goal
+  const [addedGoal, setAddedGoal] = useState(null);  
 
   const [createGoal, { error: goalError }] = useMutation(CREATE_GOAL);
+  const [deleteGoalMutation, { error: deleteGoalError }] = useMutation(DELETE_GOAL);
 
   const handleChange = (e) => {
     let value = e.target.value;
 
-    // ensure targetAmount is a number
     if (e.target.name === "targetAmount") {
       value = parseFloat(e.target.value);
     }
@@ -29,7 +29,6 @@ const GoalForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // check that all fields have been filled in
     for (let field in goal) {
       if (goal[field] === '') {
         console.error(`Invalid input: ${field} is empty`);
@@ -37,7 +36,6 @@ const GoalForm = () => {
       }
     }
   
-    // check that targetAmount is a valid number
     if (isNaN(goal.targetAmount)) {
       console.error("Invalid targetAmount");
       return;
@@ -46,15 +44,24 @@ const GoalForm = () => {
     try {
       const { data } = await createGoal({ variables: { ...goal } });
       setGoal({ description: '', targetAmount: '', targetDate: '' });
-      setAddedGoal(data.addGoal);  // update the addedGoal state
+      setAddedGoal(data.addGoal);  
     } catch (error) {
       console.error(error);
     }
   };
 
-  // render error message if there is an error
-  if (goalError) {
-    return <p>Error! {goalError.message}</p>;
+  const handleDelete = async () => {
+    try {
+      await deleteGoalMutation({ variables: { goalId: addedGoal._id } });
+      setAddedGoal(null); 
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+ 
+  if (goalError || deleteGoalError) {
+    return <p>Error! {goalError?.message || deleteGoalError?.message}</p>;
   }
 
   return (
@@ -105,6 +112,7 @@ const GoalForm = () => {
             <Card.Text>Description: {addedGoal.description}</Card.Text>
             <Card.Text>Target Amount: {addedGoal.targetAmount}</Card.Text>
             <Card.Text>Target Date: {new Date(parseInt(addedGoal.targetDate)).toLocaleDateString()}</Card.Text>
+            <Button variant="danger" onClick={handleDelete}>Delete Goal</Button>
           </Card.Body>
         </Card>
       )}
