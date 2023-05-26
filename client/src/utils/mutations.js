@@ -53,3 +53,11 @@ export const CREATE_BILL_REMINDER = gql`
     }
   }
 `;
+
+export const DELETE_BILL_REMINDER = gql`
+  mutation deleteBillReminder($billReminderId: ID!) {
+    deleteBillReminder(billReminderId: $billReminderId) {
+      _id
+    }
+  }
+`;

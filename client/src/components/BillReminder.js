@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; 
 import { useMutation } from '@apollo/client';
-import { CREATE_BILL_REMINDER } from '../utils/mutations'; 
+import { CREATE_BILL_REMINDER, DELETE_BILL_REMINDER } from '../utils/mutations'; 
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import 'animate.css/animate.min.css';
 
@@ -11,7 +11,10 @@ const BillReminderForm = () => {
     amount: '',
   });
 
-  const [createBillReminder, { data: addedBillReminder, error: billReminderError }] = useMutation(CREATE_BILL_REMINDER);
+  const [addedBillReminder, setAddedBillReminder] = useState(null);  
+
+  const [createBillReminder, { error: billReminderError }] = useMutation(CREATE_BILL_REMINDER);
+  const [deleteBillReminder, { error: deleteBillReminderError }] = useMutation(DELETE_BILL_REMINDER);
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -39,15 +42,25 @@ const BillReminderForm = () => {
     }
   
     try {
-      await createBillReminder({ variables: { ...billReminder } });
+      const { data } = await createBillReminder({ variables: { ...billReminder } });
       setBillReminder({ name: '', dueDate: '', amount: '' });
+      setAddedBillReminder(data.addBillReminder); 
     } catch (error) {
       console.error(error);
     }
   };
 
-  if (billReminderError) {
-    return <p>Error! {billReminderError.message}</p>;
+  const handleDelete = async () => {
+    try {
+      await deleteBillReminder({ variables: { billReminderId: addedBillReminder._id } });
+      setAddedBillReminder(null); 
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (billReminderError || deleteBillReminderError) {
+    return <p>Error! {billReminderError?.message || deleteBillReminderError?.message}</p>;
   }
 
   return (
@@ -92,9 +105,10 @@ const BillReminderForm = () => {
         <Card className="mt-3 animate__animated animate__fadeIn">
           <Card.Body>
             <Card.Title>Added Bill Reminder</Card.Title>
-            <Card.Text>Name: {addedBillReminder.addBillReminder.name}</Card.Text>
-            <Card.Text>Due Date: {new Date(parseInt(addedBillReminder.addBillReminder.dueDate)).toLocaleDateString()}</Card.Text>
-            <Card.Text>Amount: {addedBillReminder.addBillReminder.amount}</Card.Text>
+            <Card.Text>Name: {addedBillReminder.name}</Card.Text>
+            <Card.Text>Due Date: {new Date(parseInt(addedBillReminder.dueDate)).toLocaleDateString()}</Card.Text>
+            <Card.Text>Amount: {addedBillReminder.amount}</Card.Text>
+            <Button variant="danger" onClick={handleDelete}>Delete Bill Reminder</Button>
           </Card.Body>
         </Card>
       )}

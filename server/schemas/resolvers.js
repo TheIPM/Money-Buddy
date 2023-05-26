@@ -108,6 +108,23 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
+    deleteBillReminder: async (parent, { billReminderId }, context) => {
+      if (context.user) {
+        const billReminder = await BillReminder.findById(billReminderId);
+  
+        if (!billReminder) {
+          throw new Error('No bill reminder found with this id');
+        }
+  
+        if (billReminder.user.toString() !== context.user._id) {
+          throw new AuthenticationError('Action not allowed');
+        }
+  
+        await BillReminder.findByIdAndDelete(billReminderId);
+        return billReminder;
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
   },
 
   User: {

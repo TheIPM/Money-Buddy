@@ -60,6 +60,8 @@ const typeDefs = gql`
     addGoal(description: String!, targetAmount: Float!, targetDate: String!): Goal 
     addBillReminder(name: String!, amount: Float!, dueDate: String!): BillReminder
     deleteGoal(goalId: ID!): Goal
+    deleteBillReminder(billReminderId: ID!): BillReminder 
+
   }
 `;
 
