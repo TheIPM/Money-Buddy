@@ -6,7 +6,6 @@ const typeDefs = gql`
     username: String
     email: String
     password: String
-    financeData: [FinanceData]
     goals: [Goal]
     billReminders: [BillReminder]
   }
@@ -16,20 +15,11 @@ const typeDefs = gql`
     user: User
   }
 
-  type FinanceData {
-    _id: ID!
-    user: ID!
-    month: String!
-    year: String!
-    expenses: Float!
-    income: Float!
-    investments: Float!
-  }
+
 
   type Goal {
     _id: ID!
     user: ID!
-    title: String!
     description: String!
     targetAmount: Float!
     targetDate: String!
@@ -47,21 +37,18 @@ const typeDefs = gql`
     users: [User]
     user(username: String!): User
     me: User
-    userFinanceData(userId: ID!): [FinanceData]
-    userGoals: [Goal]
-    userBillReminders: [BillReminder]
+    userGoals(userId: ID!): [Goal]
+    userBillReminders(userId: ID!): [BillReminder]
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addFinanceData(userId: ID!, month: String!, year: String!, expenses: Float!, income: Float!, investments: Float!): FinanceData
-    updateFinanceData(_id: ID!, expenses: Float!, income: Float!, investments: Float!): FinanceData
+
     addGoal(description: String!, targetAmount: Float!, targetDate: String!): Goal 
     addBillReminder(name: String!, amount: Float!, dueDate: String!): BillReminder
     deleteGoal(goalId: ID!): Goal
     deleteBillReminder(billReminderId: ID!): BillReminder 
-
   }
 `;
 

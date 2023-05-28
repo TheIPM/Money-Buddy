@@ -1,8 +1,10 @@
-import React, { useState } from 'react'; 
-import { useMutation } from '@apollo/client';
+import React, { useState, useEffect } from 'react'; 
+import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_GOAL, DELETE_GOAL } from '../utils/mutations';
+import { QUERY_USER_GOALS } from '../utils/queries';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import 'animate.css/animate.min.css';
+import Auth from '../utils/auth';
 
 const GoalForm = () => {
   const [goal, setGoal] = useState({
@@ -13,12 +15,28 @@ const GoalForm = () => {
 
   const [addedGoal, setAddedGoal] = useState(null);  
 
-  const [createGoal, { error: goalError }] = useMutation(CREATE_GOAL);
+  const [createGoal, { error: goalError }] = useMutation(CREATE_GOAL, {
+    refetchQueries: [{ query: QUERY_USER_GOALS, variables: { userId: Auth.getProfile().data._id } }],
+  });
   const [deleteGoalMutation, { error: deleteGoalError }] = useMutation(DELETE_GOAL);
+
+  const { loading, error, data } = useQuery(QUERY_USER_GOALS, { 
+    variables: { userId: Auth.getProfile().data._id } 
+  });
+
+  useEffect(() => {
+    if (!loading && data && data.user) {
+      // The user's goals are available in data.user.goals
+      // Do something with the data, such as setting it in local state
+      if (data.user.goals.length > 0) {
+        setGoal(data.user.goals[0]);
+      }
+    }
+  }, [loading, data]);
 
   const handleChange = (e) => {
     let value = e.target.value;
-
+     
     if (e.target.name === "targetAmount") {
       value = parseFloat(e.target.value);
     }
@@ -42,23 +60,24 @@ const GoalForm = () => {
     }
   
     try {
-      const { data } = await createGoal({ variables: { ...goal } });
+      const { data } = await createGoal({ variables: { userId: Auth.getProfile().data._id, ...goal } });
       setGoal({ description: '', targetAmount: '', targetDate: '' });
-      setAddedGoal(data.addGoal);  
+      setAddedGoal(data.addGoal);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleDelete = async () => {
+    if (!addedGoal) return;
+    
     try {
-      await deleteGoalMutation({ variables: { goalId: addedGoal._id } });
-      setAddedGoal(null); 
+      await deleteGoalMutation({ variables: { userId: Auth.getProfile().data._id, goalId: addedGoal._id } });
+      setAddedGoal(null);
     } catch (error) {
       console.error(error);
     }
   };
-
  
   if (goalError || deleteGoalError) {
     return <p>Error! {goalError?.message || deleteGoalError?.message}</p>;
@@ -103,7 +122,6 @@ const GoalForm = () => {
           Add Goal
         </Button>
       </Form>
-    
 
       {addedGoal && (
         <Card className="mt-3 animate__animated animate__fadeIn">
@@ -116,8 +134,19 @@ const GoalForm = () => {
           </Card.Body>
         </Card>
       )}
+
+      {!loading && data && data.user && data.user.goals.map(goal => (
+        <Card className="mt-3 animate__animated animate__fadeIn">
+          <Card.Body>
+            <Card.Title>Existing Goal</Card.Title>
+            <Card.Text>Description: {goal.description}</Card.Text>
+            <Card.Text>Target Amount: {goal.targetAmount}</Card.Text>
+            <Card.Text>Target Date: {new Date(parseInt(goal.targetDate)).toLocaleDateString()}</Card.Text>
+          </Card.Body>
+        </Card>
+      ))}
     </Container>
-);
+  );
 };
 
 export default GoalForm;

@@ -19,12 +19,12 @@ const userSchema = new Schema({
     required: true,
     minlength: 5,
   },
-  financeData: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'FinanceData'
-    }
-  ],
+  // financeData: [
+  //   {
+  //     type: Schema.Types.ObjectId,
+  //     ref: 'FinanceData'
+  //   }
+  // ],
   goals: [
     {
       type: Schema.Types.ObjectId,

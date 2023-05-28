@@ -18,8 +18,6 @@ const goalSchema = new Schema({
     ref: 'User'
   }
 });
-  
-
 
 const Goal = model('Goal', goalSchema);
 

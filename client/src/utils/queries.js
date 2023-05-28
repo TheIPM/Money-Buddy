@@ -24,9 +24,9 @@ export const QUERY_USER_GOALS = gql`
   query userGoals($userId: ID!) {
     userGoals(userId: $userId) {
       _id
-      title
       description
       targetAmount
+      targetDate
     }
   }
 `;
@@ -35,7 +35,7 @@ export const QUERY_USER_BILL_REMINDERS = gql`
   query userBillReminders($userId: ID!) {
     userBillReminders(userId: $userId) {
       _id
-      title
+      name
       description
       dueDate
       amount
