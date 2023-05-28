@@ -3,6 +3,7 @@ import GoalForm from '../components/GoalForm';
 import BillReminderForm from '../components/BillReminder';
 import MyPieChart from '../components/MyPieChart';
 import UserGoals from '../components/UserGoals';
+import UserBills from '../components/UserBills'; 
 
 import Auth from '../utils/auth';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -24,14 +25,11 @@ const Home = () => {
             <Row>
               <Col xs={12} md={6}>
                 <GoalForm />
+                <UserGoals userId={Auth.getProfile().data._id} />
               </Col>
               <Col xs={12} md={6}>
                 <BillReminderForm />
-              </Col>
-            </Row>
-            <Row className="mt-4">
-              <Col>
-                <UserGoals userId={Auth.getProfile().data._id} />
+                <UserBills userId={Auth.getProfile().data._id} /> 
               </Col>
             </Row>
           </Container>
