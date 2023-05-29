@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import MyBarChart from './MyBarChart';
 import 'animate.css/animate.min.css';
 
@@ -56,6 +56,8 @@ const MyPieChart = () => {
   return (
     <Container className="animate__animated animate__fadeIn">
       <h2>Your Financial Overview</h2>
+      <Row>
+        <Col>
       <PieChart width={400} height={400}>
         <Pie
           data={combinedData}
@@ -73,8 +75,11 @@ const MyPieChart = () => {
         <Legend />
       </PieChart>
       
-      <MyBarChart data={[{ name: 'Income', value: totalIncome, type: 'income' }, { name: 'Expenses', value: totalExpenses, type: 'expenses' }]} />
-
+      </Col>
+      <Col>
+        <MyBarChart data={[{ name: 'Income', value: totalIncome, type: 'income' }, { name: 'Expenses', value: totalExpenses, type: 'expenses' }]} />
+      </Col>
+    </Row>
       <h3>Income</h3>
       <Form.Control
         as="select"
