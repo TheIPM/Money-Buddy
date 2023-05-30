@@ -26,8 +26,7 @@ const GoalForm = () => {
 
   useEffect(() => {
     if (!loading && data && data.user) {
-      // The user's goals are available in data.user.goals
-      // Do something with the data, such as setting it in local state
+
       if (data.user.goals.length > 0) {
         setGoal(data.user.goals[0]);
       }

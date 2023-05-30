@@ -1,10 +1,11 @@
 import React from 'react';
 import GoalForm from '../components/GoalForm';
 import BillReminderForm from '../components/BillReminder';
-import MyPieChart from '../components/MyPieChart';
+import FinancialData from '../components/FinancialData';
 import UserGoals from '../components/UserGoals';
 import UserBills from '../components/UserBills'; 
-
+import AddExpenseForm from '../components/AddExpenseForm';
+import AddIncomeForm from '../components/AddIncomeForm';
 import Auth from '../utils/auth';
 import { Container, Row, Col } from 'react-bootstrap';
 
@@ -19,7 +20,9 @@ const Home = () => {
           <Container>
             <Row className="mb-4">
               <Col>
-                <MyPieChart />
+                <FinancialData />
+                <AddIncomeForm />
+                <AddExpenseForm />
               </Col>
             </Row>
             <Row>

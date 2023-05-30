@@ -61,3 +61,29 @@ export const DELETE_BILL_REMINDER = gql`
     }
   }
 `;
+
+export const ADD_INCOME = gql`
+  mutation addIncome($amount: Float!, $date: String!, $description: String!) {
+    addIncome(amount: $amount, date: $date, description: $description) {
+      income {
+        
+        amount
+        date
+        description
+      }
+    }
+  }
+`;
+
+export const ADD_EXPENSE = gql`
+  mutation addExpense($amount: Float!, $date: String!, $description: String!) {
+    addExpense(amount: $amount, date: $date, description: $description) {
+      expenses {
+        
+        amount
+        date
+        description
+      }
+    }
+  }
+`;
