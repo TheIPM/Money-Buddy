@@ -3,6 +3,9 @@ import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import IncomeDetails from '../components/IncomeDetails';
 import ExpenseDetails from '../components/ExpenseDetails';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
@@ -36,16 +39,28 @@ const Profile = () => {
   }
 
   return (
-    <Card style={{ width: '20rem' }}>
-      <Card.Header>User Details</Card.Header>
-      <ListGroup variant="flush">
-        <ListGroup.Item>Id: {user._id}</ListGroup.Item>
-        <ListGroup.Item>Email: {user.email}</ListGroup.Item>
-        <ListGroup.Item>Username: {user.username}</ListGroup.Item>
-      </ListGroup>
-      <IncomeDetails/>
-      <ExpenseDetails/>
-    </Card>
+    <Container>
+      <Row className="justify-content-md-center">
+        <Col xs={12} md={8}>
+          <Card className="mt-5">
+            <Card.Header className="text-center font-weight-bold">User Details</Card.Header>
+            <ListGroup variant="flush">
+              <ListGroup.Item>Id: {user._id}</ListGroup.Item>
+              <ListGroup.Item>Email: {user.email}</ListGroup.Item>
+              <ListGroup.Item>Username: {user.username}</ListGroup.Item>
+            </ListGroup>
+            <Card.Body>
+              <Card.Title className="text-center font-weight-bold">Income Details</Card.Title>
+              <IncomeDetails/>
+            </Card.Body>
+            <Card.Body>
+              <Card.Title className="text-center font-weight-bold">Expense Details</Card.Title>
+              <ExpenseDetails/>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

@@ -22,6 +22,14 @@ const UserGoals = ({ userId }) => {
     return <p>Error fetching user's goals</p>;
   }
 
+  const calculateDaysUntilDue = (dueDate) => {
+    const now = new Date();
+    const due = new Date(parseInt(dueDate));
+    const differenceInTime = due.getTime() - now.getTime();
+    const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+    return differenceInDays;
+  };
+
   return (
     <div>
       <Button onClick={() => setShowGoals(!showGoals)}>
@@ -35,6 +43,7 @@ const UserGoals = ({ userId }) => {
             <Card.Text>Description: {goal.description}</Card.Text>
             <Card.Text>Target Amount: {goal.targetAmount}</Card.Text>
             <Card.Text>Target Date: {new Date(parseInt(goal.targetDate)).toLocaleDateString()}</Card.Text>
+            <Card.Text>Days until target date: {calculateDaysUntilDue(goal.targetDate)}</Card.Text>
             <Button variant="danger" onClick={async () => {
               try {
                 await deleteGoal({ 

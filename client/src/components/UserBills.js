@@ -26,9 +26,13 @@ const UserBills = ({ userId }) => {
     return <div>Loading...</div>;
   }
 
-  if (data.userBillReminders.length === 0) {
-    return <p>No bill reminders available.</p>;
-  }
+  const calculateDaysUntilDue = (dueDate) => {
+    const now = new Date();
+    const due = new Date(parseInt(dueDate));
+    const differenceInTime = due.getTime() - now.getTime();
+    const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+    return differenceInDays;
+  };
 
   return (
     <div>
@@ -43,6 +47,7 @@ const UserBills = ({ userId }) => {
             <Card.Text>Name: {bill.name}</Card.Text>
             <Card.Text>Amount: {bill.amount}</Card.Text>
             <Card.Text>Due Date: {new Date(parseInt(bill.dueDate)).toLocaleDateString()}</Card.Text>
+            <Card.Text>Days until due: {calculateDaysUntilDue(bill.dueDate)}</Card.Text>
             <Button variant="danger" onClick={() => handleClick(bill._id)}>Delete Bill Reminder</Button>
           </Card.Body>
         </Card>
