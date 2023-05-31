@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { QUERY_ME } from '../utils/queries';
 
 const FinancialData = () => {
@@ -16,27 +16,34 @@ const FinancialData = () => {
 
   const { income, expenses } = data.me;
 
-  const financialData = income.map((incomeItem, i) => ({
-    name: `Entry ${i + 1}`,
-    income: incomeItem.amount,
-    expenses: expenses[i] ? expenses[i].amount : 0,
-  }));
+  const totalIncome = income.reduce((acc, incomeItem) => acc + incomeItem.amount, 0);
+  const totalExpenses = expenses.reduce((acc, expenseItem) => acc + expenseItem.amount, 0);
+  const balance = totalIncome - totalExpenses; 
+
+  const financialData = [
+    { name: 'Income', value: totalIncome },
+    { name: 'Expenses', value: totalExpenses },
+  ];
+
+  const balanceColor = balance < 0 ? 'red' : 'green';
 
   return (
-    <LineChart
-      width={500}
-      height={300}
-      data={financialData}
-      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Line type="monotone" dataKey="income" stroke="#8884d8" activeDot={{ r: 8 }} />
-      <Line type="monotone" dataKey="expenses" stroke="#82ca9d" />
-    </LineChart>
+    <div>
+      <h2 style={{ color: balanceColor }}>Your Balance is: ${balance}</h2> 
+      <BarChart
+        width={500}
+        height={300}
+        data={financialData}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="value" fill="#8884d8" />
+      </BarChart>
+    </div>
   );
 };
 

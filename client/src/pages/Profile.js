@@ -3,7 +3,8 @@ import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-
+import IncomeDetails from '../components/IncomeDetails';
+import ExpenseDetails from '../components/ExpenseDetails';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
 
 import Auth from '../utils/auth';
@@ -42,6 +43,8 @@ const Profile = () => {
         <ListGroup.Item>Email: {user.email}</ListGroup.Item>
         <ListGroup.Item>Username: {user.username}</ListGroup.Item>
       </ListGroup>
+      <IncomeDetails/>
+      <ExpenseDetails/>
     </Card>
   );
 };

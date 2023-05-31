@@ -61,6 +61,10 @@ type Income {
     addBillReminder(name: String!, amount: Float!, dueDate: String!): BillReminder
     deleteGoal(goalId: ID!): Goal
     deleteBillReminder(billReminderId: ID!): BillReminder 
+    resetIncome: User
+    resetExpense: User
+    deleteIncome(incomeId: ID!): User
+    deleteExpense(expenseId: ID!): User
   }
 `;
 

@@ -145,6 +145,50 @@ const resolvers = {
       }
       throw new Error('You need to be logged in!');
     },
+    resetIncome: async (parent, args, context) => {
+      if (context.user) {
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { $set: { income: [] } },
+          { new: true }
+        );
+        return updatedUser;
+      }
+      throw new Error('You need to be logged in!');
+    },
+    resetExpense: async (parent, args, context) => {
+      if (context.user) {
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { $set: { expenses: [] } },
+          { new: true }
+        );
+        return updatedUser;
+      }
+      throw new Error('You need to be logged in!');
+    },
+    deleteIncome: async (parent, { incomeId }, context) => {
+      if (context.user) {
+        const updatedUser = await User.update(
+          { _id: context.user._id },
+          { $pull: { income: { _id: incomeId } } },
+          { new: true }
+        );
+        return updatedUser;
+      }
+      throw new Error('You need to be logged in!');
+    },
+    deleteExpense: async (parent, { expenseId }, context) => {
+      if (context.user) {
+        const updatedUser = await User.update(
+          { _id: context.user._id },
+          { $pull: { expenses: { _id: expenseId } } },
+          { new: true }
+        );
+        return updatedUser;
+      }
+      throw new Error('You need to be logged in!');
+    },
   },
   
   User: {

@@ -87,3 +87,53 @@ export const ADD_EXPENSE = gql`
     }
   }
 `;
+
+export const RESET_INCOME = gql`
+  mutation resetIncome {
+    resetIncome {
+      income {
+        amount
+        date
+        description
+      }
+    }
+  }
+`;
+
+export const RESET_EXPENSE = gql`
+  mutation resetExpense {
+    resetExpense {
+      expenses {
+        amount
+        date
+        description
+      }
+    }
+  }
+`;
+
+export const DELETE_INCOME = gql`
+  mutation deleteIncome($incomeId: ID!) {
+    deleteIncome(incomeId: $incomeId) {
+      income {
+        _id
+        amount
+        date
+        description
+      }
+    }
+  }
+`;
+
+export const DELETE_EXPENSE = gql`
+  mutation deleteExpense($expenseId: ID!) {
+    deleteExpense(expenseId: $expenseId) {
+      expenses {
+        _id
+        amount
+        date
+        description
+      }
+    }
+  }
+`;
