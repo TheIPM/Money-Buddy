@@ -2,7 +2,7 @@
 
 ## Description
 
-This is my final project that ive made called Money Buddy, the purpose of this is just to put in your income and your expenses, and you can have a visual representation of how it looks like. You can also put in up coming bills and goals, and see how many days till they are due.
+This is my final project that ive made called Money Buddy, the purpose of this is just to put in your income and your expenses, and you can have a visual representation of how it looks like. You can also put in up coming bills and goals, and see how many days till they are due. Here is the link to the deployed site https://shielded-reaches-02791.herokuapp.com
 
 ## Table of Contents
 
