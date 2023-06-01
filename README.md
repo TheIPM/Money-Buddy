@@ -22,7 +22,7 @@ To use this website you just got to follow these following steps:
 2. Enter your income or expenses
 3. See the analysis
 4. Enter upcoming bills and goals
-5. Click on profile and see the details of all income and expenses
+5. Click on profile and see the details of all income and expenses.
 
 ## Credits
 
