@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
+import 'animate.css/animate.min.css';
 
 const Footer = () => {
   const location = useLocation();
@@ -18,16 +19,8 @@ const Footer = () => {
             &larr; Go Back
           </Button>
         )}
-        <h4>
-          Made with{' '}
-          <span
-            className="emoji"
-            role="img"
-            aria-label="heart"
-            aria-hidden="false"
-          >
-            ❤️
-          </span>
+        <h4 className="animate__animated animate__bounce animate__infinite">
+          Money Buddy
         </h4>
       </Container>
     </footer>

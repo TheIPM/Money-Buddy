@@ -6,7 +6,7 @@ import { Card, Button } from 'react-bootstrap';
 import 'animate.css/animate.min.css';
 
 const UserBills = ({ userId }) => {
-  const { loading, data } = useQuery(QUERY_USER_BILL_REMINDERS, {
+  const { loading, data, refetch } = useQuery(QUERY_USER_BILL_REMINDERS, {
     variables: { userId },
   });
   
@@ -17,6 +17,7 @@ const UserBills = ({ userId }) => {
   const handleClick = async (billId) => {
     try {
       await deleteBillReminder({ variables: { billReminderId: billId } });
+      refetch();  // Refetch after deletion
     } catch (err) {
       console.error(err);
     }

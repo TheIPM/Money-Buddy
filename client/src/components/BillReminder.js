@@ -1,8 +1,13 @@
 import React, { useState } from 'react'; 
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_BILL_REMINDER, DELETE_BILL_REMINDER } from '../utils/mutations'; 
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import 'animate.css/animate.min.css';
+import { QUERY_USER_BILL_REMINDERS } from '../utils/queries';
+import Auth from '../utils/auth';
+
+
+
 
 const BillReminderForm = () => {
   const [billReminder, setBillReminder] = useState({
@@ -13,8 +18,13 @@ const BillReminderForm = () => {
 
   const [addedBillReminder, setAddedBillReminder] = useState(null);  
 
-  const [createBillReminder, { error: billReminderError }] = useMutation(CREATE_BILL_REMINDER);
-  const [deleteBillReminder, { error: deleteBillReminderError }] = useMutation(DELETE_BILL_REMINDER);
+  const [createBillReminder, { error: billReminderError }] = useMutation(CREATE_BILL_REMINDER, {
+    refetchQueries: [{ query: QUERY_USER_BILL_REMINDERS, variables: { userId: Auth.getProfile().data._id } }],
+  });
+  
+  const [deleteBillReminder, { error: deleteBillReminderError }] = useMutation(DELETE_BILL_REMINDER, {
+    refetchQueries: [{ query: QUERY_USER_BILL_REMINDERS, variables: { userId: Auth.getProfile().data._id } }],
+  });
 
   const handleChange = (e) => {
     let value = e.target.value;
